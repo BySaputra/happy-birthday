@@ -386,62 +386,103 @@ body.pre-birthday .loader {
 
 .countdown-ready h2 {
     margin: 10px 0 22px;
+}/* Flexible Scrollable Container for Birthday Message Screen */
+.gate-screen.letter-screen {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: clamp(28px, 6vh, 52px) 16px;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(165, 105, 110, 0.35) transparent;
 }
 
+.gate-screen.letter-screen::-webkit-scrollbar {
+    width: 6px;
+}
+
+.gate-screen.letter-screen::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.gate-screen.letter-screen::-webkit-scrollbar-thumb {
+    background-color: rgba(165, 105, 110, 0.35);
+    border-radius: 6px;
+}
 
 .letter-paper {
     position: relative;
     text-align: left;
     background: #fffdf9;
     border: 1px solid rgba(230, 185, 185, 0.5);
-    box-shadow: 0 12px 40px rgba(214, 153, 153, 0.2);
-    border-radius: 12px;
-    animation: letter-focus .8s ease both;
-    overflow: hidden;
+    box-shadow: 0 16px 45px rgba(214, 153, 153, 0.22);
+    border-radius: 20px;
+    animation: letter-focus .8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    width: min(94vw, 640px);
+    margin: auto 0;
+    padding: clamp(32px, 6vw, 50px) clamp(22px, 5vw, 44px);
+    box-sizing: border-box;
 }
 
 .letter-paper::before {
     content: "🌸";
     position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 28px;
-    opacity: 0.3;
+    top: 18px;
+    right: 20px;
+    font-size: 26px;
+    opacity: 0.35;
+    pointer-events: none;
 }
 
 .letter-paper::after {
     content: "🌸";
     position: absolute;
-    bottom: 15px;
-    left: 15px;
-    font-size: 28px;
-    opacity: 0.3;
+    bottom: 18px;
+    left: 20px;
+    font-size: 26px;
+    opacity: 0.35;
+    pointer-events: none;
 }
 
-.letter-content {
-    min-height: 180px;
-    margin: 24px 0;
+.letter-paper .message-title {
+    margin: 0 0 22px;
+    font-size: clamp(22px, 5vw, 30px);
+    color: #5d3c3f;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.letter-paper .message-content {
+    margin: 0 0 24px;
+    animation: letter-fade 1s ease .2s both;
+}
+
+.letter-paper .message-content p {
+    margin: 0 0 16px;
     color: #63464a;
-    font-size: clamp(17px, 4vw, 20px);
-    line-height: 1.7;
-    animation: letter-fade 1.2s ease .25s both;
+    font-size: clamp(15px, 3.8vw, 17px);
+    line-height: 1.75;
 }
 
-.letter-placeholder {
-    color: #b2928f;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
+.letter-paper .message-content p:last-child {
+    margin-bottom: 0;
 }
 
-.letter-signature {
-    margin: 0 0 26px;
+.letter-paper .signature {
+    margin: 28px 0 24px;
     text-align: right;
     color: #7b5558;
     font-size: 22px;
+    font-weight: 500;
 }
 
-.letter-signature::before {
-    content: "- ";
+.letter-paper .gate-button {
+    display: block;
+    margin: 28px auto 0;
+    min-width: 190px;
+    text-align: center;
 }
 
 .sr-only {
@@ -463,19 +504,25 @@ body.pre-birthday .loader {
     75% { transform: translateX(-4px); }
 }
 
-
-
 @keyframes letter-focus {
     from {
         opacity: 0;
-        transform: translateY(22px) scale(.97);
+        transform: translateY(14px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
 @keyframes letter-fade {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -484,10 +531,18 @@ body.pre-birthday .loader {
         padding: 18px 14px;
     }
 
-    .gate-card,
-    .letter-paper {
+    .gate-screen.letter-screen {
+        padding: 20px 12px;
+    }
+
+    .gate-card {
         width: min(94vw, 390px);
         padding: 26px 18px;
+    }
+
+    .letter-paper {
+        width: min(96vw, 520px);
+        padding: 28px 18px;
     }
 
     .countdown-timer {
