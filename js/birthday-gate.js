@@ -3,6 +3,8 @@
     var TARGET_TIMEZONE = "Asia/Jakarta";
     var TARGET_TIME_UTC = new Date("2026-07-19T17:00:00Z").getTime();
     var countdownInterval = null;
+    var fadeInterval = null;
+    var TARGET_VOLUME = 0.25;
 
     function byId(id) {
         return document.getElementById(id);
@@ -17,6 +19,84 @@
 
     function formatPart(value) {
         return String(value).padStart(2, "0");
+    }
+
+    function playMessageMusic() {
+        var audio = byId("messageMusic");
+        if (!audio) return;
+
+        if (fadeInterval) clearInterval(fadeInterval);
+        audio.volume = 0;
+        var playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(function () {
+                var currentVol = 0;
+                fadeInterval = setInterval(function () {
+                    currentVol += 0.025;
+                    if (currentVol >= TARGET_VOLUME) {
+                        currentVol = TARGET_VOLUME;
+                        clearInterval(fadeInterval);
+                        fadeInterval = null;
+                    }
+                    audio.volume = currentVol;
+                }, 100);
+                var toggleBtn = byId("message-music-toggle");
+                if (toggleBtn) toggleBtn.classList.remove("is-muted");
+            }).catch(function (e) {
+                console.log("Autoplay restricted or postponed: ", e);
+                var toggleBtn = byId("message-music-toggle");
+                if (toggleBtn) toggleBtn.classList.add("is-muted");
+            });
+        }
+    }
+
+    function stopMessageMusic(callback) {
+        var audio = byId("messageMusic");
+        if (!audio) {
+            if (callback) callback();
+            return;
+        }
+
+        if (fadeInterval) clearInterval(fadeInterval);
+
+        if (audio.paused || audio.volume <= 0) {
+            audio.pause();
+            audio.currentTime = 0;
+            if (callback) callback();
+            return;
+        }
+
+        var currentVol = audio.volume;
+        fadeInterval = setInterval(function () {
+            currentVol -= 0.04;
+            if (currentVol <= 0) {
+                currentVol = 0;
+                audio.volume = 0;
+                audio.pause();
+                audio.currentTime = 0;
+                clearInterval(fadeInterval);
+                fadeInterval = null;
+                if (callback) callback();
+            } else {
+                audio.volume = currentVol;
+            }
+        }, 50);
+    }
+
+    function toggleMessageMusic() {
+        var audio = byId("messageMusic");
+        var toggleBtn = byId("message-music-toggle");
+        if (!audio) return;
+
+        if (audio.paused) {
+            audio.volume = TARGET_VOLUME;
+            audio.play();
+            if (toggleBtn) toggleBtn.classList.remove("is-muted");
+        } else {
+            audio.pause();
+            if (toggleBtn) toggleBtn.classList.add("is-muted");
+        }
     }
 
     function updateCountdown() {
@@ -35,6 +115,7 @@
             readyPanel.removeAttribute("hidden");
             setTimeout(function () {
                 showScreen("letter-screen");
+                playMessageMusic();
             }, 1800);
             return;
         }
@@ -108,20 +189,26 @@
 
     function continueToBirthdayExperience() {
         var gate = byId("birthday-gate");
-        document.body.classList.remove("pre-birthday");
-        gate.classList.add("is-complete");
+        stopMessageMusic(function () {
+            document.body.classList.remove("pre-birthday");
+            gate.classList.add("is-complete");
 
-        setTimeout(function () {
-            gate.setAttribute("hidden", "hidden");
-            if (window.startBirthdayExperience) {
-                window.startBirthdayExperience();
-            }
-        }, 820);
+            setTimeout(function () {
+                gate.setAttribute("hidden", "hidden");
+                if (window.startBirthdayExperience) {
+                    window.startBirthdayExperience();
+                }
+            }, 600);
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function () {
         byId("lock-form").addEventListener("submit", handleUnlock);
         byId("continue-birthday").addEventListener("click", continueToBirthdayExperience);
+        var toggleBtn = byId("message-music-toggle");
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", toggleMessageMusic);
+        }
         var pinInput = byId("pin-input");
         if (pinInput) {
             pinInput.addEventListener("input", updatePinSlots);
