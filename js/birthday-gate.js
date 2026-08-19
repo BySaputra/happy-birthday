@@ -1,7 +1,7 @@
 (function () {
     var SECRET_PIN = "2054";
     var TARGET_TIMEZONE = "Asia/Jakarta";
-    var TARGET_TIME_UTC = new Date("2026-07-19T17:00:00Z").getTime();
+    var TARGET_TIME_UTC = new Date("2026-08-19T17:00:00Z").getTime();
     var countdownInterval = null;
     var fadeInterval = null;
     var TARGET_VOLUME = 0.25;
