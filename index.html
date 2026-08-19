@@ -10,18 +10,41 @@
 
 <body class="pre-birthday">
     <div id="birthday-gate" class="birthday-gate" aria-live="polite">
+        <div class="ambient-decor" aria-hidden="true">
+            <span class="petal p1"></span>
+            <span class="petal p2"></span>
+            <span class="petal p3"></span>
+            <span class="petal p4"></span>
+            <span class="petal p5"></span>
+            <span class="sparkle s1"></span>
+            <span class="sparkle s2"></span>
+        </div>
         <section id="lock-screen" class="gate-screen lock-screen is-active">
             <div class="gate-card lock-card">
-                <div class="lock-icon" aria-hidden="true">LOCK</div>
+                <div class="lock-icon" aria-hidden="true">
+                    <span class="lock-shackle"></span>
+                    <span class="lock-body"></span>
+                </div>
                 <p class="gate-eyebrow">A little surprise</p>
-                <h1>For Bintang</h1>
+                <h1 class="gate-title">For Bintang</h1>
                 <p class="gate-copy">This letter is locked.</p>
 
                 <form id="lock-form" class="pin-form" autocomplete="off">
                     <label class="sr-only" for="pin-input">Secret PIN</label>
-                    <input id="pin-input" class="pin-input" type="password" inputmode="numeric" maxlength="4"
-                        pattern="[0-9]*" aria-describedby="pin-feedback" placeholder="----">
-                    <button type="submit" class="gate-button">Unlock</button>
+                    <div class="pin-wrapper">
+                        <input id="pin-input" class="pin-input-field" type="password" inputmode="numeric" maxlength="4"
+                            pattern="[0-9]*" aria-describedby="pin-feedback" placeholder="" autocomplete="off">
+                        <div class="pin-slots" aria-hidden="true">
+                            <div class="pin-slot"></div>
+                            <div class="pin-slot"></div>
+                            <div class="pin-slot"></div>
+                            <div class="pin-slot"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="gate-button">
+                        <span class="btn-text">Unlock</span>
+                        <span class="btn-spinner" hidden></span>
+                    </button>
                 </form>
                 <p id="pin-feedback" class="gate-feedback" role="status"></p>
             </div>
@@ -38,46 +61,31 @@
                 </div>
                 <p class="timezone-note">20 August 2026, 00:00 WIB</p>
                 <div id="countdown-ready" class="countdown-ready" hidden>
-                    <h2>It's time.</h2>
-                    <button id="open-letter-gate" type="button" class="gate-button">Open Your Letter</button>
+                    <h2>It's time... </h2>
                 </div>
             </div>
         </section>
 
-        <section id="envelope-screen" class="gate-screen envelope-screen">
-            <div class="envelope-stage">
-                <button id="envelope-button" type="button" class="envelope-card" aria-label="Open envelope for Bintang">
-                    <span class="letter-peek"></span>
-                    <span class="envelope-back"></span>
-                    <span class="envelope-flap"></span>
-                    <span class="envelope-left"></span>
-                    <span class="envelope-right"></span>
-                    <span class="envelope-seal">LOVE</span>
-                </button>
-                <p class="envelope-label">For Bintang</p>
-            </div>
-        </section>
+
 
         <section id="letter-screen" class="gate-screen letter-screen">
-            <article class="letter-paper">
-                <p class="gate-eyebrow">Dear Bintang,</p>
-                <div class="letter-content">
-                    <!-- BIRTHDAY LETTER CONTENT -->
-                    <p class="letter-placeholder">Your birthday letter goes here.</p>
+            <article class="letter-paper birthday-message">
+                <h2 class="message-title">HAIII Bintang, </h2>
+                <div class="message-content">
+                    <p>Selamat ulang tahun! 🎂✨</p>
+                    <p>Terima kasih karena sudah dan masih terus berjuang sampai sejauh ini. I Know mungkin nggak semua perjalanan yang dilewati mudah, tapi kamu tetap bertahan dan terus melangkah. Untuk itu, aku benar-benar bangga punya sahabat seperti kamu.</p>
+                    <p>Semoga di fase baru ini, semua hal baik yang kamu harapkan bisa perlahan datang dan satu per satu terwujud. Semoga Tuhan selalu memberikanmu kesehatan, kebahagiaan, kekuatan, dan jalan terbaik untuk setiap langkah yang kamu pilih.</p>
+                    <p>Tetap jadi Bintang yang kuat, ya. Jangan terlalu keras sama diri sendiri, dan kalau suatu saat perjalanan terasa berat, ingat bahwa kamu sudah berhasil melewati banyak hal sampai di titik ini.</p>
+                    <p>Semoga tahun ini menjadi awal dari banyak hal indah yang menunggumu.</p>
+                    <p>Happy birthday, Bintang!</p>
                 </div>
-                <p class="letter-signature">Bayu</p>
+                <p class="signature">&mdash; Bayu</p>
                 <button id="continue-birthday" type="button" class="gate-button">Continue &rarr;</button>
             </article>
         </section>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="loader">
-                <button id="play">Start</button>
-            </div>
-        </div>
-    </div>
+
     <audio class="song" controls loop>
         <source src="music.mp3">
         </source>

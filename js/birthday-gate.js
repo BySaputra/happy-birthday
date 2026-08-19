@@ -1,7 +1,7 @@
 (function () {
     var SECRET_PIN = "2054";
     var TARGET_TIMEZONE = "Asia/Jakarta";
-    var TARGET_TIME_UTC = Date.now() + (10 * 1000);
+    var TARGET_TIME_UTC = new Date("2026-07-19T17:00:00Z").getTime();
     var countdownInterval = null;
 
     function byId(id) {
@@ -33,6 +33,9 @@
             byId("seconds").textContent = "00";
             timer.setAttribute("hidden", "hidden");
             readyPanel.removeAttribute("hidden");
+            setTimeout(function () {
+                showScreen("letter-screen");
+            }, 1800);
             return;
         }
 
@@ -58,6 +61,18 @@
         }
     }
 
+    function updatePinSlots() {
+        var input = byId("pin-input");
+        if (!input) return;
+        var val = input.value || "";
+        var slots = document.querySelectorAll(".pin-slot");
+        var isFocused = document.activeElement === input;
+        slots.forEach(function (slot, idx) {
+            slot.classList.toggle("is-filled", idx < val.length);
+            slot.classList.toggle("is-active", isFocused && (idx === val.length || (idx === 3 && val.length === 4)));
+        });
+    }
+
     function handleUnlock(event) {
         event.preventDefault();
 
@@ -71,26 +86,24 @@
 
         if (input.value === SECRET_PIN) {
             lockScreen.classList.add("is-unlocking");
+            var lockCard = lockScreen.querySelector(".lock-card");
+            if (lockCard) {
+                lockCard.classList.add("is-unlocked-card");
+            }
             input.blur();
-            setTimeout(startCountdown, 850);
+            updatePinSlots();
+            setTimeout(startCountdown, 750);
             return;
         }
 
-        feedback.textContent = "Hmm... that's not the key";
+        feedback.textContent = "Hmm... PIN-nya belum pas 🤭";
         form.classList.add("is-error");
         input.value = "";
+        updatePinSlots();
         input.focus();
         setTimeout(function () {
             form.classList.remove("is-error");
         }, 420);
-    }
-
-    function openEnvelope() {
-        var envelopeScreen = byId("envelope-screen");
-        envelopeScreen.classList.add("is-open");
-        setTimeout(function () {
-            showScreen("letter-screen");
-        }, 1850);
     }
 
     function continueToBirthdayExperience() {
@@ -100,20 +113,24 @@
 
         setTimeout(function () {
             gate.setAttribute("hidden", "hidden");
-            var playButton = byId("play");
-            if (playButton) {
-                playButton.focus();
+            if (window.startBirthdayExperience) {
+                window.startBirthdayExperience();
             }
         }, 820);
     }
 
     document.addEventListener("DOMContentLoaded", function () {
         byId("lock-form").addEventListener("submit", handleUnlock);
-        byId("open-letter-gate").addEventListener("click", function () {
-            showScreen("envelope-screen");
-        });
-        byId("envelope-button").addEventListener("click", openEnvelope);
         byId("continue-birthday").addEventListener("click", continueToBirthdayExperience);
-        byId("pin-input").focus();
+        var pinInput = byId("pin-input");
+        if (pinInput) {
+            pinInput.addEventListener("input", updatePinSlots);
+            pinInput.addEventListener("focus", updatePinSlots);
+            pinInput.addEventListener("blur", updatePinSlots);
+        }
+        updatePinSlots();
+        if (pinInput) {
+            pinInput.focus();
+        }
     });
 }());
